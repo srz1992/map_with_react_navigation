@@ -1,6 +1,11 @@
 import React from 'react';
 import { MapView } from 'expo';
 import {GOOGLE_API_KEY} from '../key';
+import { connect } from 'react-redux';
+
+const mapStateToProps = state => ({
+  disasterType: state.disasterType.type
+})
 
 class Map extends React.Component {
 
@@ -10,23 +15,46 @@ class Map extends React.Component {
         markers: [
           {latlng:{latitude: 37.807177, longitude: -122.438176},
             title: 'Meow',
-            description: "This is a marker"
+            description: "This is a marker",
+            type: "earthquake"
           },
           {latlng:{latitude: 37.807166, longitude: -122.428300},
           title: 'Bark',
-          description: "This is a marker"
+          description: "This is a marker",
+          type: "mudslide"
           },
           {latlng:{latitude: 37.807199, longitude: -122.418200},
             title: 'Ribbit',
-            description: "This is a marker"
+            description: "This is a marker",
+            type: "typhoon"
           }
-        ]
+        ],
+        disasterType: this.props.type
       }
     }
-    
-    myfunction = () => {
-      console.log('hello'); 
+
+    async componentDidMount(){
+      await this.setState({
+        ...this.state,
+        disasterType: this.props.disasterType
+      })
+      console.log('this disasterType:', this.state.disasterType);
+      
     }
+
+    // componentDidUpdate(prevProps, prevState){
+    //   if(prevProps.disasterType !== this.props.disasterType){
+    //     console.log('updated:', this.props.disasterType);
+    //   }
+    //   if(prevState.disasterType !== this.state.disasterType){
+    //     console.log('it updated');
+    //     console.log('new disasterType:', this.state.disasterType);
+    //     console.log('old disasterType:', prevState.disasterType);
+        
+        
+        
+    //   }
+    // }
   
     render() {
       return (
@@ -39,14 +67,16 @@ class Map extends React.Component {
             longitudeDelta: 0.0421,
           }}
         >
-         {this.state.markers.map((marker,i) => (
+         {this.state.markers.filter(marker => marker.type === this.props.disasterType).map((marker,i) => {
+          console.log('the marker:', marker)
+          return (
       <MapView.Marker
         key={i}
         coordinate={marker.latlng}
         title={marker.title}
         description={marker.description}
       />
-    ))}
+    )})}
         
         <MapView.Polyline
           coordinates={
@@ -68,4 +98,4 @@ class Map extends React.Component {
     }
   }
 
-  export default Map;
+  export default connect(mapStateToProps)(Map);

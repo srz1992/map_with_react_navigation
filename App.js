@@ -46,13 +46,7 @@ export default class App extends React.Component {
 
   }
 
-//  chooseDisaster = async(event) => {
-//    await this.setState({
-//      disasterType: event
-//    })
-//    console.log('this.state:', this.state);
-//    this.props.navigation.navigate('Map')
-//  }
+
 
   render(){
     return(  
